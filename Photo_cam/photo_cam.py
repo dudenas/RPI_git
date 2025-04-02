@@ -12,11 +12,7 @@ camera = PiCamera()
 # init camera
 time_interval = 60
 
-# Manual settings for the second photo
-MANUAL_ISO = 800
-MANUAL_SHUTTER_SPEED = 10000  # 1/100 second in microseconds
-
-# make the adjustments
+# Configure camera
 camera.resolution = (2592, 1944)
 camera.awb_mode = 'auto'
 camera.exposure_mode = 'auto'
@@ -43,42 +39,23 @@ while not found:
 # Create a log file to track settings
 log_file = f"{outdir}/photo_settings.csv"
 with open(log_file, "w") as f:
-    f.write("Timestamp,Filename,Mode,ISO,Shutter_Speed\n")
+    f.write("Timestamp,Filename,ISO,Exposure_Speed\n")
 
 idx = 0
 while True:
     now = datetime.now()
     date = now.strftime("%Y%m%d-%H_%M_%S")
     
-    # Take first photo with auto settings
-    auto_filename = f"{date}_auto.jpg"
-    auto_path = f"{outdir}/{auto_filename}"
-    print(f"[{idx}] Taking auto photo: {auto_filename}")
+    # Take photo with auto settings
+    filename = f"{date}.jpg"
+    photo_path = f"{outdir}/{filename}"
+    print(f"[{idx}] Taking photo: {filename}")
     
-    camera.exposure_mode = 'auto'
-    time.sleep(0.5)  # Give camera time to adjust
-    camera.capture(auto_path)
+    camera.capture(photo_path)
     
-    # Log the auto photo settings
+    # Log the photo settings
     with open(log_file, "a") as f:
-        f.write(f"{date},{auto_filename},auto,{camera.iso},{camera.exposure_speed}\n")
-    
-    # Take second photo with manual settings
-    manual_filename = f"{date}_manual_iso{MANUAL_ISO}_shutter{MANUAL_SHUTTER_SPEED/1000}.jpg"
-    manual_path = f"{outdir}/{manual_filename}"
-    print(f"[{idx}] Taking manual photo: {manual_filename}")
-    
-    # Switch to manual mode
-    camera.exposure_mode = 'off'
-    camera.iso = MANUAL_ISO
-    camera.shutter_speed = MANUAL_SHUTTER_SPEED
-    time.sleep(0.5)  # Give camera time to adjust
-    
-    camera.capture(manual_path)
-    
-    # Log the manual photo settings
-    with open(log_file, "a") as f:
-        f.write(f"{date},{manual_filename},manual,{MANUAL_ISO},{MANUAL_SHUTTER_SPEED}\n")
+        f.write(f"{date},{filename},{camera.iso},{camera.exposure_speed}\n")
     
     print(f"[{idx}] Completed at {date}")
     idx += 1

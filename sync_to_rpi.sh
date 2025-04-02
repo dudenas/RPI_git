@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-RPI_IP="172.20.10.2"
+RPI_IP="172.20.10.5"
 RPI_USER="pi"
 RPI_PASSWORD="labas"  # Only used once during SSH key setup
 RPI_PATH="/home/pi/Desktop"  # Destination folder on Raspberry Pi
